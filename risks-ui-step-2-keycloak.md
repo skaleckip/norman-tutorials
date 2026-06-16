@@ -114,7 +114,7 @@ Finally, we have to tell Keycloak, to/from which network addresses the client co
 As out dev version of React client starts at http://localhost:5173, and will expose some special URL for KeyCloak to call-back after login attempt, we need to:  
 - Set *Root URL*, *Home URL* "to http://localhost:5173"
 - Set *Valid redirect URIs* and *Valid post logout redirect URIs* to "http://localhost:5173/*", beware of the **TRAILING STAR!!!**
-- Set *Web origins* to "http://localhost:5173/", beware of the **TRAILING SLASH!!!** (you could enter "*", but let's get used to production-grade-ish values)
+- Set *Web origins* to "http://localhost:5173" (you could enter "*", but let's get used to production-grade-ish values)
 
 ![client_urls.png](keycloak/client_urls.png)
 
