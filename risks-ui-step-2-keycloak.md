@@ -2,7 +2,8 @@
 
 Step-by-step guide
 
-## Why KeyCloak?
+## Why KeyC
+loak?
 
 1) Protecting user credentials by yourself is hard. 
 The sooner we master a battle-tested solution the better.
@@ -131,3 +132,20 @@ Click *Create* and go to *Credentials* tab.
 ![user_password.png](keycloak/user_password.png)
 
 Click *Save* + red confirmation.
+
+## Inspect authorization URLs
+
+With Norman realm selected, in the sideline, under *Configure* section, click *Realm settings*. At the very bottom of *General* tab you should see *Endpoints* links.
+
+![realm_links.png](keycloak/realm_links.png)
+
+Click, *OpenID Endpoints Configuration*. It will open a browser window. If there is an option for pretty formatting, use it (here Chrome option).
+
+![browser_format.png](keycloak/browser_format.png)
+
+For now, just notice these attributes:
+
+![realms_links_more.png](keycloak/realms_links_more.png)
+
+The *issuer* value will be used when configuring React UI & Spring Boot API applications. The *authorization_endpoint* is where user will be redirected to log-in. The *token_endpoint* is where the client application will send a POST request to get e.g. an access token to use with API. The *userinfo_endpoint* is where API can get user details, if not available in the token.
+The *end_session_endpoint* will get a request to invalidate tokens and log user out.
