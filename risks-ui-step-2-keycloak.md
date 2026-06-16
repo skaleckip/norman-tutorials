@@ -82,7 +82,52 @@ You should see "master" realm (it means: a kingdom or a domain ruled by a monarc
 
 ## Create Norman realm!
 
-DO NOT work with "master" realm. 
-Instead, click "Manage realms" in the sidebar, and create a new one, called "norman" (lowercase like "master"). 
-When created, click "Realm settings" in the sidebar, and add "Norman" as a display name.
-Go back to "Manage realms" and make sure Norman is the "Current realm".
+DO NOT work with *master* realm. 
+Instead, click *Manage realms* in the sidebar, and create a new one, called "norman" (lowercase like "master"). 
+When created, click *Realm settings* in the sidebar, and add "Norman" as a display name.
+Go back to *Manage realms* and make sure Norman is the *Current realm*.
+
+## Create risks-ui client (i.e. UI application)
+
+In the sidebar, under *Manage* section, click *Clients*, and then click *Create client*.
+Leave *Client type* as "OpenID Connect" (we are using this protocol), enter "risks-ui" as *Client ID*.
+"Risks UI" as *Name*, and click *Next*. You will see a *Capability config* section for our client.
+
+Unfortunately, any SPA (e.g. React or Angular) applications is considered to be a *public client*.
+Unlike Server-Side-Rendered/SSR applications (e.g. Next.js or SvelteKit or react-server), there is **no way to effectively authenticate such a client**. 
+
+Instead, we need to make it safer with PKCE, which stands for Proof Key for Code Exchange.
+PKCE ensures that exactly THE SAME SOFTWARE:
+- has sent the user to the Authorization Server (KeyCloak), so he can LOG-IN and confirm he/she agrees to use his data, and later
+- has contacted the Authorization Server (KeyCloak) to get an *access token* to API services.
+
+- Think of PKCE as of a cryptographic version of tearing a banknote and sending user with one half of it, and contacting the Authorization Server with the second one.
+
+This long-ish lecture is to say that you need to:
+- Turn *Require PKCE* on
+- Leave PKCE Method unchanged, i.e. S256 (the first half of a banknote is hashed with SHA 256 algorithm)
+
+![client_pkce.png](keycloak/client_pkce.png)
+
+Finally, we have to tell Keycloak, to/from which network addresses the client communicates legally.
+As out dev version of React client starts at http://localhost:5173, and will expose some special URL for KeyCloak to call-back after login attempt, we need to:  
+- Set *Root URL*, *Home URL* "to http://localhost:5173"
+- Set *Valid redirect URIs* and *Valid post logout redirect URIs* to "http://localhost:5173/*", beware of the **TRAILING STAR!!!**
+- Set *Web origins* to "http://localhost:5173/", beware of the **TRAILING SLASH!!!** (you could enter "*", but let's get used to production-grade-ish values)
+
+![client_urls.png](keycloak/client_urls.png)
+
+## Create user
+
+Now let us add some test user. In the sidebar, click *Users*, then *Create user* and:
+- Enter *Username*
+- Enter *First name* and *Last name*
+- You may also fill *Email* and turn *Email verified* on.
+
+Click *Create* and go to *Credentials* tab.
+- Enter password + confirmation
+- Turn *Temporary* off
+
+![user_password.png](keycloak/user_password.png)
+
+Click *Save* + red confirmation.
