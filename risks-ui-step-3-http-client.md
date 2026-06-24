@@ -1,6 +1,7 @@
 # IntelliJ IDEA HTTP Client @ OAuth2 & OpenID Connect
 
-Before we extend the React application, let us use IntelliJ Http Client to test sending some http requests to a non-existing API, yet with a regular access token.
+Before we extend the React application, let us use IntelliJ Http Client to test sending some http requests to a
+non-existing API, yet with a regular access token.
 
 ## Make sure the Keycloak is running
 
@@ -8,7 +9,8 @@ You remember ... you have a *start.sh* script ;-)
 
 ## Open the risks-ui project
 
-Open the risks-ui project created in step 1 with IntelliJ IDEA. Go to menu *Tools* / *HTTP Client* / Create Request in HTTP Client.
+Open the risks-ui project created in step 1 with IntelliJ IDEA. Go to menu *Tools* / *HTTP Client* / Create Request in
+HTTP Client.
 
 You should see a new file like this:
 
@@ -18,17 +20,22 @@ Accept: application/json
 
 ###
 ```
+
 Change it to:
+
 ```text
 GET http://localhost:8080/api/risks
 Accept: application/json
 Authorization: Bearer {{$auth.token("Norman")}}
 ```
-Essentially, we want to send a simple API request to a non-existent server. Still, we want IDEA to obtain authorization token from a security definition called "Norman". Let's create it
+
+Essentially, we want to send a simple API request to a non-existent server. Still, we want IDEA to obtain authorization
+token from a security definition called "Norman". Let's create it
 
 ## Create security environment
 
-Go to the file toolbar, drop down *Run with*, and select *Add Environment to Public File*. It HAS to be Public, so "Norman" will be available for selection in any *.http file.
+Go to the file toolbar, drop down *Run with*, and select *Add Environment to Public File*. It HAS to be Public, so "
+Norman" will be available for selection in any *.http file.
 
 ![http_env_1.png](idea/http_env_1.png)
 
@@ -63,11 +70,13 @@ Now change the content of this file to:
 ```
 
 It defines a "dev" Http Client environment, with authorization security definition "Norman", which
-- uses OAuth2 "Authorization Code" flow, 
-- for a client "risks-ui", 
-- contacting Keycloak under previously seen addresses, 
-- simulating callback address correctly, 
-- forcing PKCE, which uses "Code Verifier" as our "banknote", and producing its "half" as a cryptographic hash produced by the SHA256 algorithm.
+
+- uses OAuth2 "Authorization Code" flow,
+- for a client "risks-ui",
+- contacting Keycloak under previously seen addresses,
+- simulating callback address correctly,
+- forcing PKCE, which uses "Code Verifier" as our "banknote", and producing its "half" as a cryptographic hash produced
+  by the SHA256 algorithm.
 
 If it's a bit daunting ... we'll explain a lot of this ... few more times.
 
@@ -87,7 +96,7 @@ You will be redirected to a Keycloak to login :-)
 The request will of course FAIL :-( There is no API yet!
 However, let us inspect the token first.
 
-Go back to *http-client.env.json* and  click the similar green arrow
+Go back to *http-client.env.json* and click the similar green arrow
 to the left of "Norman". The Auth Log window should show up.
 
 ![http_env_5.png](idea/http_env_5.png)
@@ -97,7 +106,8 @@ and Copy the ENTIRE access_token ("access_token": "<COPY THIS TO THE END>").
 
 Go to https://www.jwt.io/ and paste into the *Encoded token* window.
 Allow to act, if you will be asked and inspect *Decoded header* (how the token was signed by Keycloak)
-and *Decoded Payload* (this is the actual access token content) and the *JWT Signature Verification* with "Valid public key" annotation.
+and *Decoded Payload* (this is the actual access token content) and the *JWT Signature Verification* with "Valid public
+key" annotation.
 
 OAuth2 attributes are underlined, and display tooltips with explanation.
 OpenID Connect and Keycloak specific, are NOT explained.
@@ -108,5 +118,5 @@ There is quite a lot of information on the user.
 
 ![http_env_8.png](idea/http_env_8.png)
 
-There are some information on user roles, which we'll talk about later.
+There is additional information on user roles, which we'll cover later.
 Suffice to say, we need to convert these roles to ROLE_* values that Spring Boot Security supports.
